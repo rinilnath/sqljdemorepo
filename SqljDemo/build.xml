@@ -1,0 +1,55 @@
+<project name="SqljDemo" default="dist" basedir=".">
+	<description>
+    simple example build file
+  </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="sqlSrc" location="src/com/rinil/sqlj" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source">
+		<!-- Compile the Java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+	<java classname="com.rinil.sqlj.Sqlj" failonerror="true" dir="${sqlSrc}" fork="true">
+		<classpath>
+			<pathelement location="${lib}/translator.zip" />
+			<pathelement location="${lib}/runtime.jar" />
+			<pathelement location="${lib}/classes12.jar" />
+			<pathelement location="${java.home}/jre/lib/rt.jar" />
+			<pathelement location="${src}/" />
+		</classpath>
+
+		<arg value="-d=${sqlClasses}" />
+		<arg value="-compile=false" />
+		<arg value="-explain=true" />
+		<arg value="-user=myusername/mypassword" />
+		<arg value="-url=jdbc:oracle:thin:@127.0.0.1:1521:mydatabase" />
+
+		<arg value="MyFirstSQLJFile.sqlj" />
+	</java>
+
+</project>
+

@@ -1,0 +1,33 @@
+/**
+ * 
+ */
+package com.rinil.sqlj;
+
+/**
+ * @author rinilnath
+ *
+ */
+import java.sql.SQLException;
+
+import oracle.sqlj.runtime.Oracle;
+#sql iterator MyIter (String ename, int empno, float sal);
+ 
+public class SqlJ 
+{
+  public static void main (String args[]) throws SQLException 
+   {
+     Oracle.connect
+        ("jdbc:oracle:thin:@oow11:5521:sol2", "scott", "tiger");
+ 
+     #sql { insert into emp (ename, empno, sal) values ('SALMAN', 32, 20000) };
+     MyIter iter;
+ 
+     #sql iter={ select ename, empno, sal from emp };
+     while (iter.next()) {
+        System.out.println
+           (iter.ename()+" "+iter.empno()+" "+iter.sal());
+     }
+     iter.close();
+  }
+}
+ 
